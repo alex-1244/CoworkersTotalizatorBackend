@@ -1,4 +1,5 @@
 ﻿using CoworkersTotalizator.Models.Coworkers;
+using CoworkersTotalizator.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoworkersTotalizator.Dal
@@ -6,6 +7,8 @@ namespace CoworkersTotalizator.Dal
 	public class CoworkersTotalizatorContext : DbContext
 	{
 		public DbSet<Coworker> Coworkers { get; set; }
+		public DbSet<User> Users { get; set; }
+		public DbSet<Token> TokenHistory { get; set; }
 
 		public CoworkersTotalizatorContext(DbContextOptions opt) : base(opt)
 		{

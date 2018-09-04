@@ -1,26 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using CoworkersTotalizator.Dal;
 using CoworkersTotalizator.Models.Coworkers;
+using CoworkersTotalizator.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoworkersTotalizator.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class CoworkersController : ControllerBase
+	public class LoginController : ControllerBase
 	{
 		private CoworkersTotalizatorContext _context;
+		private LoginService _loginService;
 
-		public CoworkersController(CoworkersTotalizatorContext context)
+		public LoginController(
+			CoworkersTotalizatorContext context,
+			LoginService loginService)
 		{
 			this._context = context;
+			this._loginService = loginService;
 		}
 
-		[HttpGet]
-		public ActionResult<IEnumerable<Coworker>> GetAll()
+		[HttpPost]
+		public ActionResult<object> Login([FromBody] string userName)
 		{
-			return Ok(this._context.Coworkers.ToList());
+			this._loginService.GetToken(userName);
+			return Ok();
 		}
 
 		[HttpGet("{id}")]

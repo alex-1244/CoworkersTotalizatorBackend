@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoworkersTotalizator.Models
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoworkersTotalizator.Dal", "CoworkersTotalizator.Dal\CoworkersTotalizator.Dal.csproj", "{05816926-3D88-4CA2-8020-E4F8C275CFEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoworkersTotalizator.Services", "CoworkersTotalizator.Services\CoworkersTotalizator.Services.csproj", "{1AA25D03-3C05-4863-A9B9-73643F77E32D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{05816926-3D88-4CA2-8020-E4F8C275CFEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05816926-3D88-4CA2-8020-E4F8C275CFEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05816926-3D88-4CA2-8020-E4F8C275CFEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AA25D03-3C05-4863-A9B9-73643F77E32D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AA25D03-3C05-4863-A9B9-73643F77E32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AA25D03-3C05-4863-A9B9-73643F77E32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AA25D03-3C05-4863-A9B9-73643F77E32D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

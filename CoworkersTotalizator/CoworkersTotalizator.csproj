@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoworkersTotalizator.Dal\CoworkersTotalizator.Dal.csproj" />
+    <ProjectReference Include="..\CoworkersTotalizator.Services\CoworkersTotalizator.Services.csproj" />
   </ItemGroup>
 
 </Project>

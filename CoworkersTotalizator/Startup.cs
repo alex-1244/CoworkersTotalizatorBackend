@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CoworkersTotalizator.Dal;
+using CoworkersTotalizator.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,44 +17,57 @@ using Microsoft.Extensions.Options;
 
 namespace CoworkersTotalizator
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-	        services.AddDbContext<CoworkersTotalizatorContext>(options =>
-	        {
-		        options.UseSqlServer(Configuration.GetConnectionString("CoworkersTotalizatorDatabase"),
-			        sqlOptions =>
-				        sqlOptions.MigrationsAssembly(typeof(CoworkersTotalizatorContext).GetTypeInfo().Assembly.GetName().Name));
-	        });
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
 		}
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-	        app.UseCors(builder => builder.AllowAnyOrigin());
+		public IConfiguration Configuration { get; }
+
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+			services.AddDbContext<CoworkersTotalizatorContext>(options =>
+			{
+				options.UseSqlServer(Configuration.GetConnectionString("CoworkersTotalizatorDatabase"),
+					sqlOptions =>
+						sqlOptions.MigrationsAssembly(typeof(CoworkersTotalizatorContext).GetTypeInfo().Assembly.GetName().Name));
+			});
+
+			var allowedDomainsArr = Configuration.GetSection("AllowedEmailDomains").GetChildren().ToArray().Select(c => c.Value)
+				.ToArray();
+			var emailPass = Configuration.GetSection("EmailPassword").Value;
+
+			services.AddScoped(provider =>
+				new LoginService(
+					(CoworkersTotalizatorContext)provider.GetService(typeof(CoworkersTotalizatorContext)),
+					emailPass,
+					allowedDomainsArr));
+		}
+
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			app.UseCors(builder => builder.AllowAnyOrigin());
 
 			if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseHsts();
+			}
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
-        }
-    }
+			app.UseHttpsRedirection();
+			app.UseMvc(routes =>
+			{
+				routes.MapRoute("login", "{controller=Login}/{action=Login}");
+			});
+		}
+	}
 }
