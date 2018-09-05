@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CoworkersTotalizator.Dal;
 using CoworkersTotalizator.Models.Coworkers;
 using CoworkersTotalizator.Services;
@@ -10,8 +11,8 @@ namespace CoworkersTotalizator.Controllers
 	[ApiController]
 	public class LoginController : ControllerBase
 	{
-		private CoworkersTotalizatorContext _context;
-		private LoginService _loginService;
+		private readonly CoworkersTotalizatorContext _context;
+		private readonly LoginService _loginService;
 
 		public LoginController(
 			CoworkersTotalizatorContext context,
@@ -21,11 +22,23 @@ namespace CoworkersTotalizator.Controllers
 			this._loginService = loginService;
 		}
 
-		[HttpPost]
+		[HttpPost("login")]
 		public ActionResult<object> Login([FromBody] string userName)
 		{
 			this._loginService.GetToken(userName);
 			return Ok();
+		}
+
+		[HttpPost("validate")]
+		public ActionResult<object> Validate([FromBody] Guid token)
+		{
+			var twentyMinutesAgo = DateTime.UtcNow - TimeSpan.FromMinutes(20);
+			if (this._context.TokenHistory.Any(x => x.Id == token && x.CreatedAt >= twentyMinutesAgo))
+			{
+				return Ok();
+			}
+
+			return BadRequest();
 		}
 
 		[HttpGet("{id}")]
