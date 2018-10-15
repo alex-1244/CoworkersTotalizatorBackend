@@ -1,42 +1,50 @@
 ﻿using System;
-using CoworkersTotalizator.Dal;
+using CoworkersTotalizator.Services;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoworkersTotalizator.Filters
 {
-	public class Authorization : Attribute, IActionFilter, IFilterFactory
+	public class Authorization : Attribute, IActionFilter
 	{
-		private CoworkersTotalizatorContext _context;
+		private LoginService _loginService;
 
-		private bool IsAdmin { get; }
+		private bool IsAdminOnly { get; }
 
-		public Authorization(bool isAdmin = false)
+		public Authorization(LoginService loginService, bool IsAdminOnly)
 		{
-			this.IsAdmin = isAdmin;
-		}
-
-		private Authorization(CoworkersTotalizatorContext context, bool isAdmin)
-		{
-			this._context = context;
-			this.IsAdmin = isAdmin;
+			this._loginService = loginService;
+			this.IsAdminOnly = IsAdminOnly;
 		}
 
 		public void OnActionExecuting(ActionExecutingContext context)
 		{
-
+			if(context.HttpContext.Request.Path == "/api/login/login")
+			{
+				this._loginService.Validate(Guid.NewGuid());
+			}
 		}
 
 		public void OnActionExecuted(ActionExecutedContext context)
 		{
-			throw new NotImplementedException();
+			
+		}
+	}
+
+	public class AuthorizationMetadata : Attribute, IFilterFactory
+	{
+		private bool isAdminOnly;
+
+		public AuthorizationMetadata(bool isAdminOnly = false)
+		{
+			this.isAdminOnly = isAdminOnly;
 		}
 
 		public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
 		{
 			return new Authorization(
-				serviceProvider.GetRequiredService<CoworkersTotalizatorContext>(),
-				this.IsAdmin);
+				serviceProvider.GetService<LoginService>(),
+				this.isAdminOnly);
 		}
 
 		public bool IsReusable => false;

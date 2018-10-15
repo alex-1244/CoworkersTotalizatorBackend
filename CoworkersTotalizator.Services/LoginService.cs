@@ -35,6 +35,17 @@ namespace CoworkersTotalizator.Services
 			}
 		}
 
+		public bool Validate(Guid token)
+		{
+			var twentyMinutesAgo = DateTime.UtcNow - TimeSpan.FromMinutes(20);
+			if (this._context.TokenHistory.Any(x => x.Id == token && x.CreatedAt >= twentyMinutesAgo))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		private Guid UpsertUser(string userName)
 		{
 			var token = Guid.NewGuid();

@@ -23,28 +23,21 @@ namespace CoworkersTotalizator.Controllers
 		}
 
 		[HttpPost("login")]
-		public ActionResult<object> Login([FromBody] string userName)
+		public ActionResult Login([FromBody] string userName)
 		{
 			this._loginService.GetToken(userName);
 			return Ok();
 		}
 
 		[HttpPost("validate")]
-		public ActionResult<object> Validate([FromBody] Guid token)
+		public ActionResult Validate([FromBody] Guid token)
 		{
-			var twentyMinutesAgo = DateTime.UtcNow - TimeSpan.FromMinutes(20);
-			if (this._context.TokenHistory.Any(x => x.Id == token && x.CreatedAt >= twentyMinutesAgo))
+			if (this._loginService.Validate(token))
 			{
 				return Ok();
 			}
 
 			return BadRequest();
-		}
-
-		[HttpGet("{id}")]
-		public ActionResult<Coworker> Get(int id)
-		{
-			return Ok(this._context.Coworkers.First(x => x.Id == id));
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using CoworkersTotalizator.Models.Coworkers;
+﻿using System;
+using CoworkersTotalizator.Models.Coworkers;
 using CoworkersTotalizator.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,15 @@ namespace CoworkersTotalizator.Dal
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Coworker>()
+				 .HasIndex(u => u.Name)
+				 .IsUnique();
+
+			this.Seed(modelBuilder);
+		}
+
+		private void Seed(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Coworker>().HasData(new Coworker
 			{
