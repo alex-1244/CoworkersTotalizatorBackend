@@ -4,14 +4,16 @@ using CoworkersTotalizator.Dal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoworkersTotalizator.Dal.Migrations
 {
     [DbContext(typeof(CoworkersTotalizatorContext))]
-    partial class CoworkersTotalizatorContextModelSnapshot : ModelSnapshot
+    [Migration("20181017191733_unique coworker name")]
+    partial class uniquecoworkername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
