@@ -48,7 +48,8 @@ namespace CoworkersTotalizator
 						(CoworkersTotalizatorContext) provider.GetService(typeof(CoworkersTotalizatorContext)),
 						emailPass,
 						allowedDomainsArr))
-				.AddSingleton(provider => this.Environment);
+				.AddSingleton(provider => this.Environment)
+				.AddScoped<LotteryService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
