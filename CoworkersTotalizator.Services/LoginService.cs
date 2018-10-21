@@ -12,7 +12,7 @@ namespace CoworkersTotalizator.Services
 		private const string From = "alex-12@ukr.net";
 		private readonly CoworkersTotalizatorContext _context;
 		private readonly string[] _emailDomains;
-		private string _password;
+		private readonly string _password;
 
 		public LoginService(CoworkersTotalizatorContext context, string mailPass, params string[] emailDomains)
 		{
@@ -35,15 +35,16 @@ namespace CoworkersTotalizator.Services
 			}
 		}
 
-		public bool Validate(Guid token)
+		public bool Validate(Guid token, bool isAdminOnly = false)
 		{
 			var twentyMinutesAgo = DateTime.UtcNow - TimeSpan.FromMinutes(20);
-			if (this._context.TokenHistory.Any(x => x.Id == token && x.CreatedAt >= twentyMinutesAgo))
-			{
-				return true;
-			}
+			var existingToken = this._context.TokenHistory.FirstOrDefault(x => x.Id == token && x.CreatedAt >= twentyMinutesAgo);
+			return existingToken != null && this.IsAccesible(existingToken, isAdminOnly);
+		}
 
-			return false;
+		private bool IsAccesible(Token token, bool isAdminOnly)
+		{
+			return !isAdminOnly || this._context.Users.First(x => x.Name == token.UserId).IsAdmin;
 		}
 
 		private Guid UpsertUser(string userName)

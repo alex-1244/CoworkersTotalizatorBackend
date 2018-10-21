@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using CoworkersTotalizator.Dal;
-using CoworkersTotalizator.Models.Coworkers;
 using CoworkersTotalizator.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,14 +8,10 @@ namespace CoworkersTotalizator.Controllers
 	[ApiController]
 	public class LoginController : ControllerBase
 	{
-		private readonly CoworkersTotalizatorContext _context;
 		private readonly LoginService _loginService;
 
-		public LoginController(
-			CoworkersTotalizatorContext context,
-			LoginService loginService)
+		public LoginController(LoginService loginService)
 		{
-			this._context = context;
 			this._loginService = loginService;
 		}
 

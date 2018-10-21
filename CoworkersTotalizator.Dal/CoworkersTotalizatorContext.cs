@@ -26,11 +26,11 @@ namespace CoworkersTotalizator.Dal
 
 		private void Seed(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Coworker>().HasData(new Coworker
+			modelBuilder.Entity<User>().HasData(new User
 			{
 				Id = 1,
-				Name = "Alex T",
-				PresenceCoeficient = 0.9
+				Name = "alex112244@gmail.com",
+				IsAdmin = true
 			});
 		}
 	}

@@ -14,12 +14,15 @@ namespace CoworkersTotalizator
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, IHostingEnvironment env)
 		{
 			Configuration = configuration;
+			Environment = env;
 		}
 
-		public IConfiguration Configuration { get; }
+		private IHostingEnvironment Environment { get; set; }
+
+		private IConfiguration Configuration { get; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
@@ -41,10 +44,11 @@ namespace CoworkersTotalizator
 			var emailPass = Configuration.GetSection("EmailPassword").Value;
 
 			services.AddScoped(provider =>
-				new LoginService(
-					(CoworkersTotalizatorContext)provider.GetService(typeof(CoworkersTotalizatorContext)),
-					emailPass,
-					allowedDomainsArr));
+					new LoginService(
+						(CoworkersTotalizatorContext) provider.GetService(typeof(CoworkersTotalizatorContext)),
+						emailPass,
+						allowedDomainsArr))
+				.AddSingleton(provider => this.Environment);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

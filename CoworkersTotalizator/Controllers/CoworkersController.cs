@@ -11,7 +11,7 @@ namespace CoworkersTotalizator.Controllers
 	[ApiController]
 	public class CoworkersController : ControllerBase
 	{
-		private CoworkersTotalizatorContext _context;
+		private readonly CoworkersTotalizatorContext _context;
 
 		public CoworkersController(CoworkersTotalizatorContext context)
 		{
@@ -33,6 +33,11 @@ namespace CoworkersTotalizator.Controllers
 		[HttpPost]
 		public async Task<ActionResult<int>> Create([FromBody] Coworker newCoworker)
 		{
+			if (this._context.Coworkers.Any(x => x.Name == newCoworker.Name))
+			{
+				return BadRequest("Coworker with such name already exisits");
+			}
+
 			this._context.Coworkers.Add(newCoworker);
 			await this._context.SaveChangesAsync();
 			return Ok(newCoworker.Id);
