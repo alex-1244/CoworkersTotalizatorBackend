@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CoworkersTotalizator.Models.Lottery
+﻿namespace CoworkersTotalizator.Models.Lottery
 {
-	class LotteryUser
+	public class LotteryUser
 	{
 		public int LotteryId { get; set; }
-
 	}
 }
