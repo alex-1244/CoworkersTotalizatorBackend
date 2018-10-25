@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CoworkersTotalizator.Models.Lottery;
+using CoworkersTotalizator.Models.Lotteries;
 
 namespace CoworkersTotalizator.Models.Users
 {

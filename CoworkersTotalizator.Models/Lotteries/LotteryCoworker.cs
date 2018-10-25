@@ -1,6 +1,6 @@
 ﻿using CoworkersTotalizator.Models.Coworkers;
 
-namespace CoworkersTotalizator.Models.Lottery
+namespace CoworkersTotalizator.Models.Lotteries
 {
 	public class LotteryCoworker
 	{

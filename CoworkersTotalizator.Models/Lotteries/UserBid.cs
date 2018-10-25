@@ -1,7 +1,7 @@
 ﻿using CoworkersTotalizator.Models.Coworkers;
 using CoworkersTotalizator.Models.Users;
 
-namespace CoworkersTotalizator.Models.Lottery
+namespace CoworkersTotalizator.Models.Lotteries
 {
 	public class UserBid
 	{

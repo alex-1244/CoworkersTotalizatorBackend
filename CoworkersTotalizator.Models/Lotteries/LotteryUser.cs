@@ -1,4 +1,4 @@
-﻿namespace CoworkersTotalizator.Models.Lottery
+﻿namespace CoworkersTotalizator.Models.Lotteries
 {
 	public class LotteryUser
 	{
