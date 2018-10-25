@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoworkersTotalizator.Dal;
 using CoworkersTotalizator.Models.Coworkers;
-using CoworkersTotalizator.Models.Lottery.DTO;
+using CoworkersTotalizator.Models.Lotteries.DTO;
 using CoworkersTotalizator.Models.Users;
 using CoworkersTotalizator.Services;
 using Microsoft.EntityFrameworkCore;

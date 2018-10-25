@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CoworkersTotalizator.Models.Lottery.DTO
+namespace CoworkersTotalizator.Models.Lotteries.DTO
 {
 	public class LotteryDto
 	{

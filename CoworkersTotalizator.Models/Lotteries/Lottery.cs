@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoworkersTotalizator.Models.Coworkers;
 
-namespace CoworkersTotalizator.Models.Lottery
+namespace CoworkersTotalizator.Models.Lotteries
 {
 	public class Lottery
 	{
@@ -9,5 +10,6 @@ namespace CoworkersTotalizator.Models.Lottery
 		public string Name { get; set; }
 		public DateTime Date { get; set; }
 		public ICollection<UserBid> UserBids { get; set; }
+		public ICollection<LotteryCoworker> LotteryCoworkers { get; set; }
 	}
 }

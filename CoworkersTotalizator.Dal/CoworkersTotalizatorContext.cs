@@ -1,6 +1,6 @@
 ﻿using System;
 using CoworkersTotalizator.Models.Coworkers;
-using CoworkersTotalizator.Models.Lottery;
+using CoworkersTotalizator.Models.Lotteries;
 using CoworkersTotalizator.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +27,10 @@ namespace CoworkersTotalizator.Dal
 			modelBuilder.Entity<UserBid>()
 				.HasKey(t => new { t.LotteryId, t.UserId, t.CoworkerId });
 
+			modelBuilder.Entity<Lottery>()
+				.HasMany(x => x.UserBids)
+				.WithOne(x => x.Lottery);
+
 			modelBuilder.Entity<UserBid>()
 				.HasOne(x => x.Lottery)
 				.WithMany(x => x.UserBids);
@@ -41,6 +45,16 @@ namespace CoworkersTotalizator.Dal
 
 			modelBuilder.Entity<LotteryCoworker>()
 				.HasKey(t => new { t.LotteryId, t.CoworkerId });
+
+			modelBuilder.Entity<LotteryCoworker>()
+				.HasOne(x => x.Lottery)
+				.WithMany(x => x.LotteryCoworkers)
+				.HasForeignKey(x => x.LotteryId);
+
+			modelBuilder.Entity<LotteryCoworker>()
+				.HasOne(x => x.Coworker)
+				.WithMany(x => x.LotteryCoworkers)
+				.HasForeignKey(x => x.CoworkerId);
 
 			this.Seed(modelBuilder);
 		}

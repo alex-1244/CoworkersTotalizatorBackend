@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CoworkersTotalizator.Models.Lottery;
+using CoworkersTotalizator.Models.Lotteries;
 
 namespace CoworkersTotalizator.Models.Coworkers
 {
@@ -10,5 +10,6 @@ namespace CoworkersTotalizator.Models.Coworkers
 		public double PresenceCoeficient { get; set; }
 
 		public ICollection<UserBid> UserBids { get; set; }
+		public ICollection<LotteryCoworker> LotteryCoworkers { get; set;  }
 	}
 }

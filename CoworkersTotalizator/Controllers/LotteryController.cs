@@ -1,5 +1,7 @@
-﻿using CoworkersTotalizator.Filters;
-using CoworkersTotalizator.Models.Lottery.DTO;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CoworkersTotalizator.Filters;
+using CoworkersTotalizator.Models.Lotteries.DTO;
 using CoworkersTotalizator.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,12 @@ namespace CoworkersTotalizator.Controllers
 			LotteryService lotteryService)
 		{
 			this._lotteryService = lotteryService;
+		}
+
+		[HttpGet]
+		public ActionResult<IEnumerable<LotteryDto>> GetLotteries()
+		{
+			return this._lotteryService.GetLotteries().ToList();
 		}
 
 		[HttpPost]

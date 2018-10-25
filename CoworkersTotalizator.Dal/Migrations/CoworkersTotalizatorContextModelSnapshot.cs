@@ -38,7 +38,7 @@ namespace CoworkersTotalizator.Dal.Migrations
                     b.ToTable("Coworkers");
                 });
 
-            modelBuilder.Entity("CoworkersTotalizator.Models.Lottery.Lottery", b =>
+            modelBuilder.Entity("CoworkersTotalizator.Models.Lotteries.Lottery", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace CoworkersTotalizator.Dal.Migrations
                     b.ToTable("Lotteries");
                 });
 
-            modelBuilder.Entity("CoworkersTotalizator.Models.Lottery.LotteryCoworker", b =>
+            modelBuilder.Entity("CoworkersTotalizator.Models.Lotteries.LotteryCoworker", b =>
                 {
                     b.Property<int>("LotteryId");
 
@@ -66,7 +66,7 @@ namespace CoworkersTotalizator.Dal.Migrations
                     b.ToTable("LotteryCoworker");
                 });
 
-            modelBuilder.Entity("CoworkersTotalizator.Models.Lottery.UserBid", b =>
+            modelBuilder.Entity("CoworkersTotalizator.Models.Lotteries.UserBid", b =>
                 {
                     b.Property<int>("LotteryId");
 
@@ -117,27 +117,27 @@ namespace CoworkersTotalizator.Dal.Migrations
                     );
                 });
 
-            modelBuilder.Entity("CoworkersTotalizator.Models.Lottery.LotteryCoworker", b =>
+            modelBuilder.Entity("CoworkersTotalizator.Models.Lotteries.LotteryCoworker", b =>
                 {
                     b.HasOne("CoworkersTotalizator.Models.Coworkers.Coworker", "Coworker")
-                        .WithMany()
+                        .WithMany("LotteryCoworkers")
                         .HasForeignKey("CoworkerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("CoworkersTotalizator.Models.Lottery.Lottery", "Lottery")
-                        .WithMany()
+                    b.HasOne("CoworkersTotalizator.Models.Lotteries.Lottery", "Lottery")
+                        .WithMany("LotteryCoworkers")
                         .HasForeignKey("LotteryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("CoworkersTotalizator.Models.Lottery.UserBid", b =>
+            modelBuilder.Entity("CoworkersTotalizator.Models.Lotteries.UserBid", b =>
                 {
                     b.HasOne("CoworkersTotalizator.Models.Coworkers.Coworker", "Coworker")
                         .WithMany("UserBids")
                         .HasForeignKey("CoworkerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("CoworkersTotalizator.Models.Lottery.Lottery", "Lottery")
+                    b.HasOne("CoworkersTotalizator.Models.Lotteries.Lottery", "Lottery")
                         .WithMany("UserBids")
                         .HasForeignKey("LotteryId")
                         .OnDelete(DeleteBehavior.Cascade);
