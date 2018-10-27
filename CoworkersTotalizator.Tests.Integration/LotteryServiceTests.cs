@@ -39,15 +39,11 @@ namespace CoworkersTotalizator.Tests.Integration
 
 			context.SaveChanges();
 
-			ls.CreateLotery(new LotteryDto
+			ls.Create(new LotteryDto
 			{
 				Name = "Lottery1",
 				Date = DateTime.Now,
-				CoworkerIds = new[] { 1 },
-				UserBids = new Dictionary<int, CoworkerBid>()
-				{
-					{ 1, new CoworkerBid{ Bid = 0.5m, CowrkerId = 1} }
-				}
+				CoworkerIds = new[] { 1 }
 			});
 			
 			Assert.Equal(1, context.Users.First().UserBids.First().CoworkerId);

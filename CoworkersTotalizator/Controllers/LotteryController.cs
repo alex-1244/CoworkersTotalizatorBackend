@@ -23,13 +23,20 @@ namespace CoworkersTotalizator.Controllers
 		[HttpGet]
 		public ActionResult<IEnumerable<LotteryDto>> GetLotteries()
 		{
-			return this._lotteryService.GetLotteries().ToList();
+			return this._lotteryService.GetAll().ToList();
 		}
 
 		[HttpPost]
 		public ActionResult<int> CreateLottery([FromBody] LotteryDto dto)
 		{
-			return this._lotteryService.CreateLotery(dto);
+			return this._lotteryService.Create(dto);
+		}
+
+		[HttpDelete("{id}")]
+		public ActionResult DeleteLottery(int id)
+		{
+			this._lotteryService.Delete(id);
+			return Ok();
 		}
 	}
 }
