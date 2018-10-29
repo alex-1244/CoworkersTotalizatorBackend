@@ -13,7 +13,7 @@ namespace CoworkersTotalizator.Models.Lotteries.DTO
 
 	public class CoworkerBid
 	{
-		public int CowrkerId { get; set; }
-		public decimal Bid { get; set; }
+		public int CoworkerId { get; set; }
+		public decimal BidAmmount { get; set; }
 	}
 }

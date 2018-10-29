@@ -24,12 +24,18 @@ namespace CoworkersTotalizator.Dal
 				 .HasIndex(u => u.Name)
 				 .IsUnique();
 
+			modelBuilder.Entity<Coworker>()
+				.HasMany(x => x.UserBids)
+				.WithOne(x => x.Coworker)
+				.HasForeignKey(x => x.CoworkerId);
+
 			modelBuilder.Entity<UserBid>()
 				.HasKey(t => new { t.LotteryId, t.UserId, t.CoworkerId });
 
 			modelBuilder.Entity<Lottery>()
 				.HasMany(x => x.UserBids)
-				.WithOne(x => x.Lottery);
+				.WithOne(x => x.Lottery)
+				.HasForeignKey(x => x.LotteryId);
 
 			modelBuilder.Entity<UserBid>()
 				.HasOne(x => x.Lottery)
@@ -37,7 +43,8 @@ namespace CoworkersTotalizator.Dal
 
 			modelBuilder.Entity<UserBid>()
 				.HasOne(x => x.Coworker)
-				.WithMany(x => x.UserBids);
+				.WithMany(x => x.UserBids)
+				.HasForeignKey(x => x.CoworkerId);
 
 			modelBuilder.Entity<UserBid>()
 				.HasOne(x => x.User)

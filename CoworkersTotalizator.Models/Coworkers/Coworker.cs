@@ -12,4 +12,11 @@ namespace CoworkersTotalizator.Models.Coworkers
 		public ICollection<UserBid> UserBids { get; set; }
 		public ICollection<LotteryCoworker> LotteryCoworkers { get; set;  }
 	}
+
+	public class CoworkerDto
+	{
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public double PresenceCoeficient { get; set; }
+	}
 }

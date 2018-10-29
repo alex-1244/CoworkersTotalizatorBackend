@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CoworkersTotalizator.Filters;
+using CoworkersTotalizator.Models.Coworkers;
 using CoworkersTotalizator.Models.Lotteries.DTO;
 using CoworkersTotalizator.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,18 @@ namespace CoworkersTotalizator.Controllers
 		{
 			this._lotteryService.Delete(id);
 			return Ok();
+		}
+
+		[HttpGet("assignedCoworkers/{lotteryId}")]
+		public ActionResult<IEnumerable<CoworkerDto>> GetAssignedCoworkers(int lotteryId)
+		{
+			return Ok(this._lotteryService.GetAssignedCoworkers(lotteryId));
+		}
+
+		[HttpPost("placeBids/{lotteryId}")]
+		public void PlaceBids(int lotteryId, [FromBody] IEnumerable<CoworkerBid> bids)
+		{
+			this._lotteryService.PlaceBids(lotteryId, bids);
 		}
 	}
 }

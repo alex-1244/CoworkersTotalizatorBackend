@@ -3,6 +3,7 @@ using CoworkersTotalizator.Models.Lotteries;
 using CoworkersTotalizator.Models.Lotteries.DTO;
 using System.Collections.Generic;
 using System.Linq;
+using CoworkersTotalizator.Models.Coworkers;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoworkersTotalizator.Services
@@ -52,6 +53,44 @@ namespace CoworkersTotalizator.Services
 		public void Delete(int id)
 		{
 			this._context.Lotteries.Remove(new Lottery { Id = id });
+			this._context.SaveChanges();
+		}
+
+		public IEnumerable<CoworkerDto> GetAssignedCoworkers(int lotteryId)
+		{
+			var coworkersQ = this._context.Lotteries.Include(x => x.LotteryCoworkers).ThenInclude(x => x.Coworker);
+			var lottery = coworkersQ.First(x => x.Id == lotteryId);
+			return lottery.LotteryCoworkers.ToList().Select(x => x.Coworker).Select(x => new CoworkerDto
+			{
+				Id = x.Id,
+				Name = x.Name,
+				PresenceCoeficient = x.PresenceCoeficient
+			});
+		}
+
+		public void PlaceBids(int lotteryId, IEnumerable<CoworkerBid> bids)
+		{
+			var lottery = this._context.Lotteries.Include(x => x.UserBids).First(x => x.Id == lotteryId);
+
+			foreach (var bid in bids)
+			{
+				var coworker = new Coworker {Id = bid.CoworkerId};
+				this._context.Coworkers.Attach(coworker).State = EntityState.Unchanged;
+
+
+				var userBid = new UserBid()
+				{
+					LotteryId = lotteryId,
+					Lottery = lottery,
+					Bid = bid.BidAmmount,
+					CoworkerId = bid.CoworkerId,
+					Coworker = coworker,
+					User = this._context.Users.First()
+				};
+
+				lottery.UserBids.Add(userBid);
+			}
+
 			this._context.SaveChanges();
 		}
 	}
