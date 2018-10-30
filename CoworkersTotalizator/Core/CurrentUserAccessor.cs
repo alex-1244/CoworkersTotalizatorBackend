@@ -1,4 +1,5 @@
-﻿using System;using System.Linq;
+﻿using System;
+using System.Linq;
 using CoworkersTotalizator.Dal;
 using CoworkersTotalizator.Models.Users;
 using CoworkersTotalizator.Services;
@@ -8,8 +9,8 @@ namespace CoworkersTotalizator.Core
 {
 	public class CurrentUserAccessor : ICurrentUserAccessor
 	{
-		private IHttpContextAccessor _httpContextAccessor;
-		private CoworkersTotalizatorContext _context;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly CoworkersTotalizatorContext _context;
 
 		public CurrentUserAccessor(
 			IHttpContextAccessor httpContextAccessor,

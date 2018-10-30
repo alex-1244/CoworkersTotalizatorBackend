@@ -24,6 +24,8 @@ namespace CoworkersTotalizator.Services
 
 		public IEnumerable<LotteryDto> GetAll()
 		{
+			var crrentUserId = this._currentUserAccessor.GetCurrentUser().Id;
+
 			return this._context.Lotteries
 				.Include(x => x.UserBids)
 				.Include(x => x.LotteryCoworkers)
@@ -33,7 +35,7 @@ namespace CoworkersTotalizator.Services
 					Name = x.Name,
 					Date = x.Date,
 					CoworkerIds = x.LotteryCoworkers.Select(c => c.CoworkerId),
-					CoworkerBids = x.UserBids.Where(b => b.UserId == this._currentUserAccessor.GetCurrentUser().Id).Select(userBid => new CoworkerBid
+					CoworkerBids = x.UserBids.Where(b => b.UserId == crrentUserId).Select(userBid => new CoworkerBid
 					{
 						CoworkerId = userBid.CoworkerId,
 						BidAmmount = userBid.Bid
