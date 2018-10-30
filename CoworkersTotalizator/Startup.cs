@@ -1,14 +1,17 @@
 ﻿using System.Linq;
 using System.Reflection;
+using CoworkersTotalizator.Core;
 using CoworkersTotalizator.Dal;
 using CoworkersTotalizator.Filters;
 using CoworkersTotalizator.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace CoworkersTotalizator
 {
@@ -50,6 +53,8 @@ namespace CoworkersTotalizator
 						allowedDomainsArr))
 				.AddSingleton(provider => this.Environment)
 				.AddScoped<LotteryService>();
+			services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.TryAddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

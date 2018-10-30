@@ -23,7 +23,7 @@ namespace CoworkersTotalizator.Tests.Integration
 			context.Database.EnsureDeleted();
 			context.Database.Migrate();
 
-			LotteryService ls = new LotteryService(context);
+			LotteryService ls = new LotteryService(context, null);
 
 			context.Users.Add(new User
 			{

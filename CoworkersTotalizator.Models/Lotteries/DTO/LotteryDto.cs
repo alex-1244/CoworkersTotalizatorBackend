@@ -9,6 +9,7 @@ namespace CoworkersTotalizator.Models.Lotteries.DTO
 		public string Name { get; set; }
 		public DateTime Date { get; set; }
 		public IEnumerable<int> CoworkerIds { get; set; }
+		public IEnumerable<CoworkerBid> CoworkerBids { get; set; }
 	}
 
 	public class CoworkerBid

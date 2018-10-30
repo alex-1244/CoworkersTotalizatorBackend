@@ -11,22 +11,34 @@ namespace CoworkersTotalizator.Services
 	public class LotteryService
 	{
 		private readonly CoworkersTotalizatorContext _context;
+		private ICurrentUserAccessor _currentUserAccessor;
 
-		public LotteryService(CoworkersTotalizatorContext context)
+		public LotteryService(
+			CoworkersTotalizatorContext context,
+			ICurrentUserAccessor currentUserAccessor)
 		{
 
 			this._context = context;
+			this._currentUserAccessor = currentUserAccessor;
 		}
 
 		public IEnumerable<LotteryDto> GetAll()
 		{
-			return this._context.Lotteries.Select(x => new LotteryDto
-			{
-				Id = x.Id,
-				Name = x.Name,
-				Date = x.Date,
-				CoworkerIds = x.LotteryCoworkers.Select(c => c.CoworkerId)
-			});
+			return this._context.Lotteries
+				.Include(x => x.UserBids)
+				.Include(x => x.LotteryCoworkers)
+				.Select(x => new LotteryDto
+				{
+					Id = x.Id,
+					Name = x.Name,
+					Date = x.Date,
+					CoworkerIds = x.LotteryCoworkers.Select(c => c.CoworkerId),
+					CoworkerBids = x.UserBids.Where(b => b.UserId == this._currentUserAccessor.GetCurrentUser().Id).Select(userBid => new CoworkerBid
+					{
+						CoworkerId = userBid.CoworkerId,
+						BidAmmount = userBid.Bid
+					})
+				});
 		}
 
 		public int Create(LotteryDto lotteryDto)
