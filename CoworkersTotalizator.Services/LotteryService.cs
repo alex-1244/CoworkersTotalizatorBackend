@@ -74,21 +74,32 @@ namespace CoworkersTotalizator.Services
 
 			foreach (var bid in bids)
 			{
-				var coworker = new Coworker {Id = bid.CoworkerId};
+				var coworker = new Coworker { Id = bid.CoworkerId };
 				this._context.Coworkers.Attach(coworker).State = EntityState.Unchanged;
+				var user = this._context.Users.First();
 
+				var existingBid = lottery.UserBids.FirstOrDefault(x =>
+					x.CoworkerId == bid.CoworkerId
+					&& x.UserId == user.Id);
 
-				var userBid = new UserBid()
+				if (existingBid == null)
 				{
-					LotteryId = lotteryId,
-					Lottery = lottery,
-					Bid = bid.BidAmmount,
-					CoworkerId = bid.CoworkerId,
-					Coworker = coworker,
-					User = this._context.Users.First()
-				};
+					var userBid = new UserBid()
+					{
+						LotteryId = lotteryId,
+						Lottery = lottery,
+						Bid = bid.BidAmmount,
+						CoworkerId = bid.CoworkerId,
+						Coworker = coworker,
+						User = user
+					};
 
-				lottery.UserBids.Add(userBid);
+					lottery.UserBids.Add(userBid);
+				}
+				else
+				{
+					existingBid.Bid = bid.BidAmmount;
+				}
 			}
 
 			this._context.SaveChanges();
