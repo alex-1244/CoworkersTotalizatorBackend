@@ -10,7 +10,7 @@ namespace CoworkersTotalizator.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[AuthorizationMetadata(true)]
+	[AuthorizationMetadata]
 	public class LotteryController : ControllerBase
 	{
 		private readonly LotteryService _lotteryService;
@@ -34,6 +34,7 @@ namespace CoworkersTotalizator.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[AuthorizationMetadata(true)]
 		public ActionResult DeleteLottery(int id)
 		{
 			this._lotteryService.Delete(id);

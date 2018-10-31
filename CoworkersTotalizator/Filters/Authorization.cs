@@ -24,15 +24,13 @@ namespace CoworkersTotalizator.Filters
 
 		public void OnActionExecuting(ActionExecutingContext context)
 		{
-			if (_env.IsProduction())
+			if (!(context.HttpContext.Request.Path == "/api/login/login"
+			    || context.HttpContext.Request.Path == "/api/login/validate"))
 			{
-				if (context.HttpContext.Request.Path != "/api/login/login")
+				if (!(Guid.TryParse(context.HttpContext.Request.Headers["Authorization"], out var token) &&
+					  this._loginService.Validate(token, IsAdminOnly)))
 				{
-					if (!(Guid.TryParse(context.HttpContext.Request.Headers["Authorization"], out var token) &&
-						  this._loginService.Validate(token, IsAdminOnly)))
-					{
-						context.Result = new StatusCodeResult(StatusCodes.Status403Forbidden);
-					}
+					context.Result = new StatusCodeResult(StatusCodes.Status403Forbidden);
 				}
 			}
 		}

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoworkersTotalizator.Dal;
+using CoworkersTotalizator.Filters;
 using CoworkersTotalizator.Models.Coworkers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace CoworkersTotalizator.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[AuthorizationMetadata]
 	public class CoworkersController : ControllerBase
 	{
 		private readonly CoworkersTotalizatorContext _context;
@@ -44,6 +46,7 @@ namespace CoworkersTotalizator.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[AuthorizationMetadata(true)]
 		public async Task<ActionResult> Delete(int id)
 		{
 			this._context.Coworkers.Remove(this._context.Coworkers.Find(id));

@@ -42,6 +42,13 @@ namespace CoworkersTotalizator.Services
 			return existingToken != null && this.IsAccesible(existingToken, isAdminOnly);
 		}
 
+		public string GetRole(Guid token)
+		{
+			var existingToken = this._context.TokenHistory.FirstOrDefault(x => x.Id == token);
+			var isAdmin = this._context.Users.First(x => x.Name == existingToken.UserId).IsAdmin;
+			return isAdmin ? "Admin" : "User";
+		}
+
 		private bool IsAccesible(Token token, bool isAdminOnly)
 		{
 			return !isAdminOnly || this._context.Users.First(x => x.Name == token.UserId).IsAdmin;

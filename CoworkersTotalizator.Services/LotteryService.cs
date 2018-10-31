@@ -90,7 +90,7 @@ namespace CoworkersTotalizator.Services
 			{
 				var coworker = new Coworker { Id = bid.CoworkerId };
 				this._context.Coworkers.Attach(coworker).State = EntityState.Unchanged;
-				var user = this._context.Users.First();
+				var user = this._currentUserAccessor.GetCurrentUser();
 
 				var existingBid = lottery.UserBids.FirstOrDefault(x =>
 					x.CoworkerId == bid.CoworkerId

@@ -23,11 +23,11 @@ namespace CoworkersTotalizator.Controllers
 		}
 
 		[HttpPost("validate")]
-		public ActionResult Validate([FromBody] Guid token)
+		public ActionResult<string> Validate([FromBody] Guid token)
 		{
 			if (this._loginService.Validate(token))
 			{
-				return Ok();
+				return Ok(this._loginService.GetRole(token));
 			}
 
 			return BadRequest();
