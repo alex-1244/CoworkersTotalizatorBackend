@@ -118,5 +118,18 @@ namespace CoworkersTotalizator.Services
 
 			this._context.SaveChanges();
 		}
+
+		public IEnumerable<CoworkerBid> GetUsersBids(int lotteryId)
+		{
+			return this._context.Lotteries
+				.Include(x=>x.UserBids)
+				.Single(x=>x.Id == lotteryId)
+				.UserBids
+				.Select(userBid => new CoworkerBid
+				{
+					CoworkerId = userBid.CoworkerId,
+					BidAmmount = userBid.Bid
+				});
+		}
 	}
 }

@@ -52,5 +52,12 @@ namespace CoworkersTotalizator.Controllers
 		{
 			this._lotteryService.PlaceBids(lotteryId, bids);
 		}
+
+		[HttpGet("{lotteryId}/bids")]
+		[AuthorizationMetadata(true)]
+		public ActionResult<IEnumerable<CoworkerBid>> GetUsersBids(int lotteryId)
+		{
+			return Ok(this._lotteryService.GetUsersBids(lotteryId));
+		}
 	}
 }
