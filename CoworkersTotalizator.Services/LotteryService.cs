@@ -37,6 +37,7 @@ namespace CoworkersTotalizator.Services
 					CoworkerIds = x.LotteryCoworkers.Select(c => c.CoworkerId),
 					CoworkerBids = x.UserBids.Where(b => b.UserId == crrentUserId).Select(userBid => new CoworkerBid
 					{
+						UserId = userBid.UserId,
 						CoworkerId = userBid.CoworkerId,
 						BidAmmount = userBid.Bid
 					})
@@ -123,10 +124,12 @@ namespace CoworkersTotalizator.Services
 		{
 			return this._context.Lotteries
 				.Include(x=>x.UserBids)
+				.ThenInclude(x=>x.Coworker)
 				.Single(x=>x.Id == lotteryId)
 				.UserBids
 				.Select(userBid => new CoworkerBid
 				{
+					UserId = userBid.UserId,
 					CoworkerId = userBid.CoworkerId,
 					BidAmmount = userBid.Bid
 				});
