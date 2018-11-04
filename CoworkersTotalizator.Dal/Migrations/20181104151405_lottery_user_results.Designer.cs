@@ -4,14 +4,16 @@ using CoworkersTotalizator.Dal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoworkersTotalizator.Dal.Migrations
 {
     [DbContext(typeof(CoworkersTotalizatorContext))]
-    partial class CoworkersTotalizatorContextModelSnapshot : ModelSnapshot
+    [Migration("20181104151405_lottery_user_results")]
+    partial class lottery_user_results
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -23,7 +23,7 @@ namespace CoworkersTotalizator.Controllers
 		[HttpGet]
 		public ActionResult<IEnumerable<Coworker>> GetAll()
 		{
-			return Ok(this._context.Coworkers.ToList());
+			return Ok(this._context.Coworkers.Where(x => !x.IsDeleted).ToList());
 		}
 
 		[HttpGet("{id}")]
@@ -49,7 +49,9 @@ namespace CoworkersTotalizator.Controllers
 		[AuthorizationMetadata(true)]
 		public async Task<ActionResult> Delete(int id)
 		{
-			this._context.Coworkers.Remove(this._context.Coworkers.Find(id));
+			var coworker = this._context.Coworkers.Find(id);
+			coworker.IsDeleted = true;
+
 			await this._context.SaveChangesAsync();
 			return Ok();
 		}

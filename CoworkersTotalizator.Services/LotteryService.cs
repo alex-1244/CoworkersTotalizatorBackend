@@ -4,6 +4,7 @@ using CoworkersTotalizator.Models.Lotteries.DTO;
 using System.Collections.Generic;
 using System.Linq;
 using CoworkersTotalizator.Models.Coworkers;
+using CoworkersTotalizator.Models.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoworkersTotalizator.Services
@@ -11,15 +12,18 @@ namespace CoworkersTotalizator.Services
 	public class LotteryService
 	{
 		private readonly CoworkersTotalizatorContext _context;
-		private ICurrentUserAccessor _currentUserAccessor;
+		private readonly ICurrentUserAccessor _currentUserAccessor;
+		private readonly CoworkerBidCoeficientSerice _coworkerBidCoeficientSerice;
 
 		public LotteryService(
 			CoworkersTotalizatorContext context,
-			ICurrentUserAccessor currentUserAccessor)
+			ICurrentUserAccessor currentUserAccessor,
+			CoworkerBidCoeficientSerice coworkerBidCoeficientSerice)
 		{
 
 			this._context = context;
 			this._currentUserAccessor = currentUserAccessor;
+			this._coworkerBidCoeficientSerice = coworkerBidCoeficientSerice;
 		}
 
 		public IEnumerable<LotteryDto> GetAll()
@@ -67,25 +71,52 @@ namespace CoworkersTotalizator.Services
 
 		public void Delete(int id)
 		{
+			var lottery = this._context.Lotteries.Find(id);
+
+			if (lottery.IsFinished)
+			{
+				throw new LotteryIsFinishedException();
+			}
+
 			this._context.Lotteries.Remove(new Lottery { Id = id });
 			this._context.SaveChanges();
 		}
 
-		public IEnumerable<CoworkerDto> GetAssignedCoworkers(int lotteryId)
+		public void FinishLottery(int lotteryId, IEnumerable<int> presentCoworkerIds)
 		{
-			var coworkersQ = this._context.Lotteries.Include(x => x.LotteryCoworkers).ThenInclude(x => x.Coworker);
-			var lottery = coworkersQ.First(x => x.Id == lotteryId);
-			return lottery.LotteryCoworkers.ToList().Select(x => x.Coworker).Select(x => new CoworkerDto
+			var lottery = this._context.Lotteries.Include(x => x.UserBids).ThenInclude(x=>x.Coworker).First(x => x.Id == lotteryId);
+
+			if (lottery.IsFinished)
 			{
-				Id = x.Id,
-				Name = x.Name,
-				PresenceCoeficient = x.PresenceCoeficient
+				throw new LotteryIsFinishedException();
+			}
+
+			lottery.IsFinished = true;
+
+			var lotteryUserBids = lottery.UserBids.ToList().Where(x=>presentCoworkerIds.Contains(x.CoworkerId)).Select(x => new LotteryUserResult
+			{
+				Lottery = lottery,
+				LotteryId = lotteryId,
+				Coworker = x.Coworker,
+				CoworkerId = x.CoworkerId,
+				User = x.User,
+				UserId = x.UserId,
+				Gain = (double)x.Bid * this._coworkerBidCoeficientSerice.GetBiddingCoeficient(x.Coworker.PresenceCoeficient)
 			});
+
+			this._context.LotteryUserResults.AddRange(lotteryUserBids);
+
+			this._context.SaveChanges();
 		}
 
 		public void PlaceBids(int lotteryId, IEnumerable<CoworkerBid> bids)
 		{
 			var lottery = this._context.Lotteries.Include(x => x.UserBids).First(x => x.Id == lotteryId);
+
+			if (lottery.IsFinished)
+			{
+				throw new LotteryIsFinishedException();
+			}
 
 			foreach (var bid in bids)
 			{
@@ -120,12 +151,24 @@ namespace CoworkersTotalizator.Services
 			this._context.SaveChanges();
 		}
 
+		public IEnumerable<CoworkerDto> GetAssignedCoworkers(int lotteryId)
+		{
+			var coworkersQ = this._context.Lotteries.Include(x => x.LotteryCoworkers).ThenInclude(x => x.Coworker);
+			var lottery = coworkersQ.First(x => x.Id == lotteryId);
+			return lottery.LotteryCoworkers.ToList().Select(x => x.Coworker).Select(x => new CoworkerDto
+			{
+				Id = x.Id,
+				Name = x.Name,
+				PresenceCoeficient = x.PresenceCoeficient
+			});
+		}
+
 		public IEnumerable<CoworkerBid> GetUsersBids(int lotteryId)
 		{
 			return this._context.Lotteries
-				.Include(x=>x.UserBids)
-				.ThenInclude(x=>x.Coworker)
-				.Single(x=>x.Id == lotteryId)
+				.Include(x => x.UserBids)
+				.ThenInclude(x => x.Coworker)
+				.Single(x => x.Id == lotteryId)
 				.UserBids
 				.Select(userBid => new CoworkerBid
 				{

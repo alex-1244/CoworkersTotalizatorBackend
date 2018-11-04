@@ -55,6 +55,7 @@ namespace CoworkersTotalizator
 				.AddScoped<LotteryService>();
 			services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.TryAddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
+			services.AddScoped<CoworkerBidCoeficientSerice>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

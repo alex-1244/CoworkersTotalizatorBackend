@@ -33,6 +33,14 @@ namespace CoworkersTotalizator.Controllers
 			return this._lotteryService.Create(dto);
 		}
 
+		[HttpPost("{lotteryId}/finish")]
+		[AuthorizationMetadata(true)]
+		public ActionResult<int> FinishLottery(int lotteryId, [FromBody] int[] coworkerIds)
+		{
+			this._lotteryService.FinishLottery(lotteryId, coworkerIds.AsEnumerable());
+			return Ok();
+		}
+
 		[HttpDelete("{id}")]
 		[AuthorizationMetadata(true)]
 		public ActionResult DeleteLottery(int id)

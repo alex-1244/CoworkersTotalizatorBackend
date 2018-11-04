@@ -10,5 +10,6 @@ namespace CoworkersTotalizator.Models.Users
 		public bool IsAdmin {get; set; }
 
 		public ICollection<UserBid> UserBids { get; set; }
+		public ICollection<LotteryUserResult> LotteryUserResults { get; set; }
 	}
 }

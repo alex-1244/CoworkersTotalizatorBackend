@@ -12,6 +12,7 @@ namespace CoworkersTotalizator.Dal
 		public DbSet<User> Users { get; set; }
 		public DbSet<Token> TokenHistory { get; set; }
 		public DbSet<Lottery> Lotteries { get; set; }
+		public DbSet<LotteryUserResult> LotteryUserResults { get; set; }
 
 		public CoworkersTotalizatorContext(DbContextOptions opt) : base(opt)
 		{
@@ -20,6 +21,9 @@ namespace CoworkersTotalizator.Dal
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			MapUserBidEntity(modelBuilder);
+			MapLotteryUserResultEntity(modelBuilder);
+
 			modelBuilder.Entity<Coworker>()
 				 .HasIndex(u => u.Name)
 				 .IsUnique();
@@ -29,26 +33,10 @@ namespace CoworkersTotalizator.Dal
 				.WithOne(x => x.Coworker)
 				.HasForeignKey(x => x.CoworkerId);
 
-			modelBuilder.Entity<UserBid>()
-				.HasKey(t => new { t.LotteryId, t.UserId, t.CoworkerId });
-
 			modelBuilder.Entity<Lottery>()
 				.HasMany(x => x.UserBids)
 				.WithOne(x => x.Lottery)
 				.HasForeignKey(x => x.LotteryId);
-
-			modelBuilder.Entity<UserBid>()
-				.HasOne(x => x.Lottery)
-				.WithMany(x => x.UserBids);
-
-			modelBuilder.Entity<UserBid>()
-				.HasOne(x => x.Coworker)
-				.WithMany(x => x.UserBids)
-				.HasForeignKey(x => x.CoworkerId);
-
-			modelBuilder.Entity<UserBid>()
-				.HasOne(x => x.User)
-				.WithMany(x => x.UserBids);
 
 			modelBuilder.Entity<LotteryCoworker>()
 				.HasKey(t => new { t.LotteryId, t.CoworkerId });
@@ -64,6 +52,44 @@ namespace CoworkersTotalizator.Dal
 				.HasForeignKey(x => x.CoworkerId);
 
 			this.Seed(modelBuilder);
+		}
+
+		private void MapLotteryUserResultEntity(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<LotteryUserResult>()
+				.HasKey(t => new { t.LotteryId, t.UserId, t.CoworkerId });
+
+			modelBuilder.Entity<LotteryUserResult>()
+				.HasOne(x => x.Lottery)
+				.WithMany(x => x.LotteryUserResults);
+
+			modelBuilder.Entity<LotteryUserResult>()
+				.HasOne(x => x.Coworker)
+				.WithMany(x => x.LotteryUserResults)
+				.HasForeignKey(x => x.CoworkerId);
+
+			modelBuilder.Entity<LotteryUserResult>()
+				.HasOne(x => x.User)
+				.WithMany(x => x.LotteryUserResults);
+		}
+
+		private void MapUserBidEntity(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<UserBid>()
+				.HasKey(t => new { t.LotteryId, t.UserId, t.CoworkerId });
+
+			modelBuilder.Entity<UserBid>()
+				.HasOne(x => x.Lottery)
+				.WithMany(x => x.UserBids);
+
+			modelBuilder.Entity<UserBid>()
+				.HasOne(x => x.Coworker)
+				.WithMany(x => x.UserBids)
+				.HasForeignKey(x => x.CoworkerId);
+
+			modelBuilder.Entity<UserBid>()
+				.HasOne(x => x.User)
+				.WithMany(x => x.UserBids);
 		}
 
 		private void Seed(ModelBuilder modelBuilder)
